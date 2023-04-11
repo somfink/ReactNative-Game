@@ -26,7 +26,7 @@ const GameScreen = ({ choosenNumber, onGameOver }) => {
     const [currentGuess, setCurrentGuess] = useState(initialGuess);
 
     useEffect(() => {
-        if (currentGuess === choosenNumber) {
+        if (currentGuess === Number(choosenNumber)) {
             onGameOver();
         }
     }, [currentGuess, choosenNumber, onGameOver]);
