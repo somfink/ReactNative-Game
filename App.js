@@ -1,20 +1,66 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { ImageBackground, StyleSheet, SafeAreaView } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useState } from 'react';
+import ScreenContext, { ScreenContextProvider } from './context/screen-context';
+import StartGameScreen from './screens/StartGameScreen';
+import GameScreen from './screens/GameScreen';
+import GameOverScreen from './screens/GameOverScreen';
+import Colors from './utils/colors';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    // const { gameScreenShown } = useContext(ScreenContext);
+    // const { startGameScreen, gameScreen, gameOverScreen } = gameScreenShown;
+    const [userNumber, setUserNumber] = useState(null);
+    const [gameIsOver, setGameIsOver] = useState(true);
+
+    const pickedNumberHandler = pickedNumber => {
+        setUserNumber(pickedNumber);
+        setGameIsOver(false);
+    };
+
+    const gameOverHandler = () => {
+      setGameIsOver(true);
+    }
+
+    let screen = <StartGameScreen onConfirmNumber={pickedNumberHandler} />;
+
+    if (userNumber) {
+        screen = <GameScreen choosenNumber={userNumber} onGameOver={gameOverHandler} />;
+    }
+
+    if (gameIsOver && userNumber) {
+      screen = <GameOverScreen />
+    }
+
+
+    return (
+        <ScreenContextProvider>
+            <LinearGradient
+                colors={[Colors.primary700, Colors.accent500]}
+                style={styles.rootScreen}
+            >
+                <ImageBackground
+                    source={require('./assets/images/background.png')}
+                    style={styles.rootScreen}
+                    resizeMode="cover"
+                    imageStyle={styles.backgroundImage}
+                >
+                    <SafeAreaView style={styles.rootScreen}>
+                        {screen}
+                    </SafeAreaView>
+                    <StatusBar style="light" />
+                </ImageBackground>
+            </LinearGradient>
+        </ScreenContextProvider>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    rootScreen: {
+        flex: 1,
+    },
+    backgroundImage: {
+        opacity: 0.2,
+    },
 });
