@@ -21,10 +21,10 @@ export default function App() {
         setGameIsOver(false);
     };
 
-    const gameOverHandler = (numOfRounds) => {
-      setGameIsOver(true);
-      setGuessRounds(numOfRounds);
-    }
+    const gameOverHandler = numOfRounds => {
+        setGameIsOver(true);
+        setGuessRounds(numOfRounds);
+    };
 
     const startNewGameHandler = () => {
         setUserNumber(null);
@@ -34,33 +34,45 @@ export default function App() {
     let screen = <StartGameScreen onConfirmNumber={pickedNumberHandler} />;
 
     if (userNumber) {
-        screen = <GameScreen choosenNumber={userNumber} onGameOver={gameOverHandler} />;
+        screen = (
+            <GameScreen
+                choosenNumber={userNumber}
+                onGameOver={gameOverHandler}
+            />
+        );
     }
 
     if (gameIsOver && userNumber) {
-      screen = <GameOverScreen onStartNewGame={startNewGameHandler} userNumber={userNumber} roundsNumber={guessRounds} />
+        screen = (
+            <GameOverScreen
+                onStartNewGame={startNewGameHandler}
+                userNumber={userNumber}
+                roundsNumber={guessRounds}
+            />
+        );
     }
 
-
     return (
-        <ScreenContextProvider>
-            <LinearGradient
-                colors={[Colors.primary700, Colors.accent500]}
-                style={styles.rootScreen}
-            >
-                <ImageBackground
-                    source={require('./assets/images/background.png')}
+        <>
+            <StatusBar style="light" />
+            <ScreenContextProvider>
+                <LinearGradient
+                    colors={[Colors.primary700, Colors.accent500]}
                     style={styles.rootScreen}
-                    resizeMode="cover"
-                    imageStyle={styles.backgroundImage}
                 >
-                    <SafeAreaView style={styles.rootScreen}>
-                        {screen}
-                    </SafeAreaView>
-                    <StatusBar style="light" />
-                </ImageBackground>
-            </LinearGradient>
-        </ScreenContextProvider>
+                    <ImageBackground
+                        source={require('./assets/images/background.png')}
+                        style={styles.rootScreen}
+                        resizeMode="cover"
+                        imageStyle={styles.backgroundImage}
+                    >
+                        <SafeAreaView style={styles.rootScreen}>
+                            {screen}
+                        </SafeAreaView>
+                    </ImageBackground>
+                </LinearGradient>
+            </ScreenContextProvider>
+        </>
     );
 }
 
